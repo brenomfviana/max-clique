@@ -1,0 +1,1 @@
+Qualquer 2-clique (A instância é uma árvore)
