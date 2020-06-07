@@ -110,10 +110,10 @@ impl Graph {
 
   /// Returns true if the graph contains the edge and false otherwise.
   pub fn contains_edge(&self, e: (usize, usize)) -> bool {
-    if !self.adjmtx.contains_key(&e.0) { return false; }
-    if !self.adjmtx.contains_key(&e.1) { return false; }
-    if !self.adjmtx[&e.0].contains(&e.1) { return false; }
-    if !self.adjmtx[&e.1].contains(&e.0) { return false; }
+    if !self.adjmtx.contains_key(&e.0) { return false }
+    if !self.adjmtx.contains_key(&e.1) { return false }
+    if !self.adjmtx[&e.0].contains(&e.1) { return false }
+    if !self.adjmtx[&e.1].contains(&e.0) { return false }
     true
   }
 
@@ -123,12 +123,12 @@ impl Graph {
     for (i, k1) in self.adjmtx.keys().enumerate() {
       // If at least one node has a different number of adjacent nodes
       if i > 0 && self.degree_of(nodes[i]) != self.degree_of(nodes[i - 1]) {
-        return false;
+        return false
       }
       // Check if all nodes are adjacent to each other
       for k2 in self.adjmtx.keys() {
         if k1 == k2 { continue; }
-        if !self.adjmtx[k1].contains(&k2) { return false; }
+        if !self.adjmtx[k1].contains(&k2) { return false }
       }
     }
     true
