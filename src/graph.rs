@@ -50,27 +50,41 @@ impl Graph {
   }
 
   /// Inserts an edge in the graph.
-  pub fn insert_edge(&mut self, edge: (usize, usize)) {
-    if let Some(lst) = self.adjmtx.get_mut(&edge.0) {
-      lst.push(edge.1);
+  pub fn insert_edge(&mut self, (a, b): (usize, usize)) {
+    if let Some(lst) = self.adjmtx.get_mut(&a) {
+      lst.push(b);
       self.degree = cmp::max(self.degree, lst.len());
     }
-    else { panic!("The node {} does not belong to this graph.", edge.0); }
-    if let Some(lst) = self.adjmtx.get_mut(&edge.1) {
-      lst.push(edge.0);
+    else { panic!("The node {} does not belong to this graph.", a); }
+    if let Some(lst) = self.adjmtx.get_mut(&b) {
+      lst.push(a);
       self.degree = cmp::max(self.degree, lst.len());
     }
-    else { panic!("The node {} does not belong to this graph.", edge.1); }
+    else { panic!("The node {} does not belong to this graph.", b); }
   }
 
-  /// ```todo!()```.
-  pub fn remove_node(&mut self) {
-    todo!();
+  /// Removes a node from the graph.
+  pub fn remove_node(&mut self, n: usize) {
+    assert!(self.contains_node(n),
+      "This graph does not contains the given node.");
+    self.adjmtx.remove(&n);
+    for (_, v) in self.adjmtx.iter_mut() {
+      if let Some(index) = v.iter().position(|x| *x == n) { v.remove(index); }
+    }
   }
 
-  /// ```todo!()```.
-  pub fn remove_edge(&mut self) {
-    todo!();
+  /// Removes an edge from the graph.
+  pub fn remove_edge(&mut self, (a, b): (usize, usize)) {
+    assert!(self.contains_node(a) && self.contains_node(b),
+      "This graph does not contains at least one of the given nodes.");
+    assert!(self.adjmtx[&a].contains(&b) && self.adjmtx[&b].contains(&a),
+      "The first node is not adjacent to the second one");
+    if let Some(v) = self.adjmtx.get_mut(&a) {
+      if let Some(index) = v.iter().position(|x| *x == b) { v.remove(index); }
+    }
+    if let Some(v) = self.adjmtx.get_mut(&b) {
+      if let Some(index) = v.iter().position(|x| *x == a) { v.remove(index); }
+    }
   }
 
   /// Returns true if the graph contains the node and false otherwise.
@@ -106,7 +120,7 @@ impl Graph {
   /// Returns the number of edges of the graph.
   pub fn elen(&self) -> usize {
     let mut sum = 0;
-    for adjlst in &self.adjmtx { sum += adjlst.1.iter().len(); }
+    for (_, adjlst) in &self.adjmtx { sum += adjlst.iter().len(); }
     sum / 2
   }
 }

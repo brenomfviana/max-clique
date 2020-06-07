@@ -148,7 +148,59 @@ fn insert_node_ii() {
 #[should_panic]
 fn invalid_insert_node() {
   let mut graph = Graph::new(3);
+  graph.insert_node(1);
+}
+
+#[test]
+fn remove_node_i() {
+  let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  graph.insert_node(1);
+  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
+  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  graph.remove_node(2);
+  assert_eq!(*graph.get_adjlst_of(1), vec![3]);
+  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+}
+
+#[test]
+fn remove_node_ii() {
+  let mut graph = Graph::new(3);
+  graph.insert_edge((1, 2));
+  graph.insert_edge((1, 3));
+  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
+  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  graph.remove_node(1);
+  assert_eq!(*graph.get_adjlst_of(2), vec![]);
+  assert_eq!(*graph.get_adjlst_of(3), vec![]);
+}
+
+#[test]
+#[should_panic]
+fn invalid_remove_node() {
+  let mut graph = Graph::new(3);
+  graph.remove_node(4);
+}
+
+#[test]
+fn remove_edge() {
+  let mut graph = Graph::new(3);
+  graph.insert_edge((1, 2));
+  graph.insert_edge((1, 3));
+  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
+  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  graph.remove_edge((1, 2));
+  assert_eq!(*graph.get_adjlst_of(1), vec![3]);
+  assert_eq!(*graph.get_adjlst_of(2), vec![]);
+  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+}
+
+#[test]
+#[should_panic]
+fn invalid_remove_edge() {
+  let mut graph = Graph::new(3);
+  graph.remove_edge((1, 2));
 }
