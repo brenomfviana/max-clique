@@ -43,22 +43,24 @@ pub fn read(config: &Config) -> Result<Graph, Box<dyn Error>> {
   // Create an empty list of pairs (graph content)
   let mut gc = GraphContent::new();
   // Read the pairs
-  for line in lines {
+  for (i, line) in lines.iter().enumerate() {
     // Get list of chars of the line
     let chrs = line.split(" ").collect::<Vec<&str>>();
     // Ignore comments
-    if chrs[0] == "c" { continue; }
+    if line.len() == 0 || chrs[0] == "c" { continue; }
     // Check if the line has less than 2 characters
-    if chrs.len() <= 2 { panic!("Invalid file!"); }
+    if chrs.len() <= 2 { panic!("Invalid pair at line {}!", i + 1); }
     // Convert into pair
     let pair: Vec<usize> = (chrs[(chrs.len() - 2)..]).to_vec()
       .iter().map(|s| s.trim().parse::<usize>())
       .filter_map(Result::ok).collect();
     // Check if the pair has exactly 2 characters
-    if pair.len() != 2 { panic!("Invalid file!"); }
+    if pair.len() != 2 { panic!("The line {} has not a valid pair!", i + 1); }
     // Add the number of nodes and edges
     gc.push((pair[0], pair[1]));
   }
+  // Check if the graph has the right number of edges
+  if gc[0].1 != gc.len() - 1 { panic!("Invalid number of edges!"); }
   // Create the graph
   let mut graph = Graph::new(gc[0].0);
   for e in 1..=gc[0].1 { graph.insert_edge(gc[e]); }
