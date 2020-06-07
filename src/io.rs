@@ -1,36 +1,51 @@
 use std::error::Error;
 use std::fs;
+use clap::ArgMatches;
 use crate::graph::Graph;
 
 /// Contents of a graph file in a list of pairs format.
 type GraphContent = Vec<(usize, usize)>;
 
+pub enum Solver {
+  Backtracking,
+  BranchAndBounds,
+}
+
 /// Reading configuration.
 pub struct Config {
   filename: String,
+  solver: Solver,
 }
 
 impl Config {
   /// Validates the arguments and returns the reading configuration.
-  pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> {
-    // Skip program call
-    args.next();
+  pub fn new(matches: ArgMatches) -> Result<Config, &'static str> {
     // Get query filename from arguments
-    let filename = match args.next() {
-      Some(arg) => arg,
-      None => return Err("you did not enter the filename"),
-    };
-    // Check if there are still arguments
-    if let Some(_) = args.next() {
-      println!("WARNING: You have entered more arguments than needed.");
+    if let Some(filename) = matches.value_of("filename") {
+      // Convert filename to string
+      let filename = filename.to_string();
+      // Check if there are still arguments
+      let solver;
+      if let Some(s) = matches.value_of("solver") {
+        solver = match s {
+          "Backtracking" => Solver::Backtracking,
+          _ => Solver::Backtracking,
+        };
+      } else { solver = Solver::Backtracking; }
+      // Return the reading configuration
+      Ok(Config{ filename, solver })
     }
-    // Return the reading configuration
-    Ok(Config{ filename })
+    else { Err("you did not enter the filename") }
   }
 
   /// Returns the filename.
   pub fn get_filename(&self) -> &String {
     &self.filename
+  }
+
+  /// Returns the solver.
+  pub fn get_solver(&self) -> &Solver {
+    &self.solver
   }
 }
 
