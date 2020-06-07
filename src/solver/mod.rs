@@ -25,6 +25,6 @@ pub fn solve(graph: &Graph, solver: &Solver) -> Result<Graph, &'static str> {
   // Run solver and return solution
   match solver {
     Solver::Backtracking => Ok(backtracking::solve(&graph)),
-    Solver::BranchAndBounds => todo!(),
+    Solver::BranchAndBound => todo!(),
   }
 }

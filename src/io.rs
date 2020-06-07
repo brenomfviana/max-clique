@@ -9,7 +9,7 @@ type GraphContent = Vec<(usize, usize)>;
 /// Options of solver for maximum clique problem.
 pub enum Solver {
   Backtracking,
-  BranchAndBounds,
+  BranchAndBound,
 }
 
 /// Reading configuration.
@@ -30,7 +30,7 @@ impl Config {
       if let Some(s) = matches.value_of("solver") {
         solver = match s {
           "Backtracking" => Solver::Backtracking,
-          "BranchAndBounds" => Solver::BranchAndBounds,
+          "BranchAndBound" => Solver::BranchAndBound,
           _ => return Err("you have entered an invalid solver"),
         };
       } else { return Err("you have entered invalid arguments") }

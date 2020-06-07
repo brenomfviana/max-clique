@@ -17,4 +17,4 @@ args:
       takes_value: true
       possible_values:
         - Backtracking
-        - BranchAndBounds
+        - BranchAndBound
