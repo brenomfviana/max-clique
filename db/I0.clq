@@ -1,11 +1,10 @@
-c FILE: I1.clq
+c FILE: I0.clq
 c
 c SOURCE: Manually created by Breno Viana
 c
 c Graph Stats
 c number of vertices  : 3
-c number of edges     : 3
-p col 3 3
+c number of edges     : 2
+p col 3 2
 e 1 2
-e 1 3
 e 2 3
