@@ -14,7 +14,7 @@ pub struct Graph {
 impl Graph {
   /// Creates a new graph with disconnected nodes and returns it.
   pub fn new(nodes: usize) -> Graph {
-    assert!(nodes != 0);
+    assert!(nodes != 0, "The number of nodes cannot be zero.");
     let mut adjmtx = AdjMtx::new();
     for n in 1..=nodes { adjmtx.insert(n, vec![]); }
     Graph { adjmtx, degree: 0 }
@@ -25,24 +25,28 @@ impl Graph {
     Graph { adjmtx: AdjMtx::new(), degree: 0 }
   }
 
-  /// ```todo!()```.
+  /// Returns the graph degree.
   pub fn degree(&self) -> usize {
     self.degree
   }
 
-  /// ```todo!()```.
-  pub fn degree_of(&self) -> usize {
-    todo!();
+  /// Returns the degree of a node.
+  pub fn degree_of(&self, n: usize) -> usize {
+    assert!(self.contains_node(n),
+      "The given node does not belong to the graph");
+    self.adjmtx[&n].len()
   }
 
-  /// ```todo!()```.
-  pub fn get_adjlst_of(&self) -> Vec<usize> {
-    todo!();
+  /// Returns the adjacency list of a node.
+  pub fn get_adjlst_of(&self, n: usize) -> &Vec<usize> {
+    &self.adjmtx[&n]
   }
 
-  /// ```todo!()```.
-  pub fn insert_node(&mut self) {
-    todo!();
+  /// Inserts a new node in the graph.
+  pub fn insert_node(&mut self, n: usize) {
+    assert!(!self.contains_node(n),
+      "The given node already belongs to the graph");
+    self.adjmtx.insert(n, vec![]);
   }
 
   /// Inserts an edge in the graph.
