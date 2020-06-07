@@ -1,6 +1,5 @@
 use std::error::Error;
 use std::fs;
-
 use crate::graph::Graph;
 
 /// Contents of a graph file in a list of pairs format.
@@ -23,7 +22,7 @@ impl Config {
     };
     // Check if there are still arguments
     if let Some(_) = args.next() {
-      println!("  WARNING: You have entered more arguments than needed.");
+      println!("WARNING: You have entered more arguments than needed.");
     }
     // Return the reading configuration
     Ok(Config{ filename })
@@ -36,7 +35,7 @@ impl Config {
 }
 
 /// Reads a graph file and returns the respective graph.
-pub fn read(config: Config) -> Result<Graph, Box<dyn Error>> {
+pub fn read(config: &Config) -> Result<Graph, Box<dyn Error>> {
   // Read the file
   let content = fs::read_to_string(config.get_filename())?;
   // Split content by '\n'

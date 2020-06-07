@@ -4,23 +4,22 @@ use std::collections::HashMap;
 type AdjMtx = HashMap<usize, Vec<usize>>;
 
 /// This struct represents a graph.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Graph {
   adjmtx: AdjMtx,
-  lenght: usize,
 }
 
 impl Graph {
   /// Creates a new graph with disconnected nodes and returns it.
   pub fn new(nodes: usize) -> Graph {
-    let mut adjmtx = HashMap::new();
+    let mut adjmtx = AdjMtx::new();
     for n in 1..=nodes { adjmtx.insert(n, vec![]); }
-    Graph { adjmtx, lenght: nodes }
+    Graph { adjmtx }
   }
 
   /// Creates a new empty graph and returns it.
   pub fn new_empty() -> Graph {
-    Graph { adjmtx: HashMap::new(), lenght: 0 }
+    Graph { adjmtx: AdjMtx::new() }
   }
 
   /// ```todo!()```.
@@ -47,6 +46,11 @@ impl Graph {
   }
 
   /// ```todo!()```.
+  pub fn get_adjlst_of(&self) -> Vec<usize> {
+    todo!();
+  }
+
+  /// ```todo!()```.
   pub fn remove(&mut self) {
     todo!();
   }
@@ -58,6 +62,6 @@ impl Graph {
 
   /// Returns the graph lenght.
   pub fn len(&self) -> usize {
-    self.lenght
+    self.adjmtx.len()
   }
 }

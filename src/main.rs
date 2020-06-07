@@ -10,12 +10,12 @@ use std::process;
 use max_clique::io::Config;
 
 fn main() {
-  // Get arguments
+  // Get configuration
   let config = Config::new(env::args()).unwrap_or_else(|err| {
     eprintln!("Problem parsing arguments: {}", err);
     process::exit(1);
   });
-  // Perform the search
+  // Run the maximum clique solver
   if let Err(e) = max_clique::run(config) {
     eprintln!("Application error: {}.", e);
     process::exit(1);
