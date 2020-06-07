@@ -119,7 +119,7 @@ pub fn write(filename: &String, result: &Graph) -> Result<(), &'static str> {
       for n in nodes { content += format!("{} ", n).as_str(); }
       // Create and write the file
       if let Err(_) = fs::write(&filename, content) {
-        return Err("something went wrong during file writting")
+        return Err("something went wrong during file writing")
       }
       return Ok(())
     }
