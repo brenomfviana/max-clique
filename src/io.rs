@@ -6,6 +6,7 @@ use crate::graph::Graph;
 /// Contents of a graph file in a list of pairs format.
 type GraphContent = Vec<(usize, usize)>;
 
+/// Options of solver for maximum clique problem.
 pub enum Solver {
   Backtracking,
   BranchAndBounds,

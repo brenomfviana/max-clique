@@ -7,8 +7,8 @@ type AdjMtx = HashMap<usize, Vec<usize>>;
 /// This struct represents a graph.
 #[derive(Clone, Debug)]
 pub struct Graph {
-  adjmtx: AdjMtx,
   degree: usize,
+  adjmtx: AdjMtx,
 }
 
 impl Graph {
