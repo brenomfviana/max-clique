@@ -29,9 +29,10 @@ impl Config {
       if let Some(s) = matches.value_of("solver") {
         solver = match s {
           "Backtracking" => Solver::Backtracking,
-          _ => Solver::Backtracking,
+          "BranchAndBounds" => Solver::BranchAndBounds,
+          _ => return Err("you have entered an invalid solver"),
         };
-      } else { solver = Solver::Backtracking; }
+      } else { return Err("you have entered invalid arguments") }
       // Return the reading configuration
       Ok(Config{ filename, solver })
     }
