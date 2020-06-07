@@ -48,7 +48,9 @@ impl Graph {
   pub fn edges(&self) -> Vec<(usize, usize)> {
     let mut edges: Vec<(usize, usize)> = vec![];
     for (k, adjlst) in &self.adjmtx {
-      for n in adjlst { edges.push((*k, *n)); }
+      for n in adjlst {
+        if !edges.contains(&(*n, *k)) { edges.push((*k, *n)); }
+      }
     }
     edges
   }
