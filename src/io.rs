@@ -1,5 +1,8 @@
+extern crate dirs;
+
 use std::error::Error;
 use std::fs;
+use std::path::Path;
 use clap::ArgMatches;
 use crate::graph::Graph;
 
@@ -16,6 +19,7 @@ pub enum Solver {
 pub struct Config {
   filename: String,
   solver: Solver,
+  save: bool,
 }
 
 impl Config {
@@ -34,10 +38,13 @@ impl Config {
           _ => return Err("you have entered an invalid solver"),
         };
       } else { return Err("you have entered invalid arguments") }
+      // Check if there are still arguments
+      let mut save = false;
+      if matches.is_present("save") { save = true; }
       // Return the reading configuration
-      Ok(Config{ filename, solver })
+      return Ok(Config{ filename, solver, save })
     }
-    else { Err("you did not enter the filename") }
+    Err("you did not enter the filename")
   }
 
   /// Returns the filename.
@@ -48,6 +55,11 @@ impl Config {
   /// Returns the solver.
   pub fn get_solver(&self) -> &Solver {
     &self.solver
+  }
+
+  /// Returns true if the result must be saved or false otherwise.
+  pub fn is_save(&self) -> bool {
+    self.save
   }
 }
 
@@ -83,4 +95,34 @@ pub fn read(config: &Config) -> Result<Graph, Box<dyn Error>> {
   for e in 1..=gc[0].1 { graph.insert_edge(gc[e]); }
   // Return the graph
   Ok(graph)
+}
+
+/// Writes a file of a graph.
+pub fn write(filename: &String, result: &Graph) -> Result<(), &'static str> {
+  // Create directory if it does not exists
+  if let Some(dir) = dirs::home_dir() {
+    if let Some(dir) = dir.into_os_string().to_str() {
+      let target = format!("{}{}", dir, "/max-clique-solutions/");
+      if !Path::new(&target).exists() {
+        // Check if the folder was successifully created
+        if let Err(_) = fs::create_dir(&target) {
+          return Err("the result folder could not be created")
+        }
+      }
+      // Fix filename
+      let filename = filename.split("/").collect::<Vec<&str>>();
+      let filename = filename[filename.len() - 1];
+      let filename = format!("{}result_{}", target, filename);
+      // Get resulting graph edges
+      let mut content = String::new();
+      let mut nodes = result.nodes(); nodes.sort();
+      for n in nodes { content += format!("{} ", n).as_str(); }
+      // Create and write the file
+      if let Err(_) = fs::write(&filename, content) {
+        return Err("something went wrong during file writting")
+      }
+      return Ok(())
+    }
+  }
+  Err("the home folder could not be found")
 }

@@ -4,7 +4,7 @@ author: Breno Viana <bmfviana@gmail.com>
 about: A solver for maximum clique problem.
 args:
   - filename:
-      help: Sets the input file(s) to use
+      help: Set the input file(s) to use.
       short: f
       long: filename
       required: true
@@ -18,3 +18,6 @@ args:
       possible_values:
         - Backtracking
         - BranchAndBound
+  - save:
+      help: Save the solver result.
+      long: save

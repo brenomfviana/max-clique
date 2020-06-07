@@ -18,14 +18,23 @@ use std::error::Error;
 pub fn run(config: io::Config) -> Result<(), Box<dyn Error>> {
   // Read the graph from file
   let graph = io::read(&config)?;
-  println!("Read graph:");
-  println!("  {:?}", graph);
+  if graph.nlen() <= 10 || graph.elen() <= 10 {
+    println!("Read graph:");
+    println!("  {:?}", graph);
+  } else {
+    println!("WARNING: the given graph is too big and cannot be printed.");
+  }
   // Run the max clique solver
   let result = solver::solve(&graph, &config.get_solver())?;
-  println!("Maximum clique subgraph:");
-  println!("  {:?}", result);
-  // TODO: print result
-  todo!("print result");
+  // Check result size
+  if result.nlen() <= 10 || result.elen() <= 10 {
+    println!("Maximum clique subgraph:");
+    println!("  {:?}", result);
+  } else {
+    println!("WARNING: the resulting graph is too big and cannot be printed.");
+  }
+  // Check if the result must be saved
+  if config.is_save() { io::write(&config.get_filename(), &result)?; }
   // Return Ok
   Ok(())
 }
