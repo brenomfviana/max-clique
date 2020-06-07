@@ -1,3 +1,4 @@
+use std::cmp;
 use std::collections::HashMap;
 
 /// ```todo!()```.
@@ -7,28 +8,35 @@ type AdjMtx = HashMap<usize, Vec<usize>>;
 #[derive(Clone, Debug)]
 pub struct Graph {
   adjmtx: AdjMtx,
+  degree: usize,
 }
 
 impl Graph {
   /// Creates a new graph with disconnected nodes and returns it.
   pub fn new(nodes: usize) -> Graph {
+    assert!(nodes != 0);
     let mut adjmtx = AdjMtx::new();
     for n in 1..=nodes { adjmtx.insert(n, vec![]); }
-    Graph { adjmtx }
+    Graph { adjmtx, degree: 0 }
   }
 
   /// Creates a new empty graph and returns it.
   pub fn new_empty() -> Graph {
-    Graph { adjmtx: AdjMtx::new() }
+    Graph { adjmtx: AdjMtx::new(), degree: 0 }
   }
 
   /// ```todo!()```.
-  pub fn degre(&self) -> usize {
+  pub fn degree(&self) -> usize {
+    self.degree
+  }
+
+  /// ```todo!()```.
+  pub fn degree_of(&self) -> usize {
     todo!();
   }
 
   /// ```todo!()```.
-  pub fn degre_of(&self) -> usize {
+  pub fn get_adjlst_of(&self) -> Vec<usize> {
     todo!();
   }
 
@@ -39,29 +47,62 @@ impl Graph {
 
   /// Inserts an edge in the graph.
   pub fn insert_edge(&mut self, edge: (usize, usize)) {
-    if let Some(lst) = self.adjmtx.get_mut(&edge.0) { lst.push(edge.1); }
+    if let Some(lst) = self.adjmtx.get_mut(&edge.0) {
+      lst.push(edge.1);
+      self.degree = cmp::max(self.degree, lst.len());
+    }
     else { panic!("The node {} does not belong to this graph.", edge.0); }
-    if let Some(lst) = self.adjmtx.get_mut(&edge.1) { lst.push(edge.0); }
+    if let Some(lst) = self.adjmtx.get_mut(&edge.1) {
+      lst.push(edge.0);
+      self.degree = cmp::max(self.degree, lst.len());
+    }
     else { panic!("The node {} does not belong to this graph.", edge.1); }
   }
 
   /// ```todo!()```.
-  pub fn get_adjlst_of(&self) -> Vec<usize> {
+  pub fn remove_node(&mut self) {
     todo!();
   }
 
   /// ```todo!()```.
-  pub fn remove(&mut self) {
+  pub fn remove_edge(&mut self) {
     todo!();
   }
 
-  /// Returns true if the graph is empty and returns false otherwise.
+  /// Returns true if the graph contains the node and false otherwise.
+  pub fn contains_node(&self, n: usize) -> bool {
+    self.adjmtx.contains_key(&n)
+  }
+
+  /// Returns true if the graph contains the edge and false otherwise.
+  pub fn contains_edge(&self, e: (usize, usize)) -> bool {
+    if !self.adjmtx.contains_key(&e.0) { return false; }
+    if !self.adjmtx.contains_key(&e.1) { return false; }
+    if !self.adjmtx[&e.0].contains(&e.1) { return false; }
+    if !self.adjmtx[&e.1].contains(&e.0) { return false; }
+    true
+  }
+
+  /// ```todo!()```.
+  pub fn is_complete(&self) -> bool {
+    todo!();
+  }
+
+  /// Returns true if the graph is empty and false otherwise.
   pub fn is_empty(&self) -> bool {
+    if self.adjmtx.is_empty() { assert!(self.degree == 0); }
     self.adjmtx.is_empty()
   }
 
-  /// Returns the graph lenght.
-  pub fn len(&self) -> usize {
+  /// Returns the number of nodes of the graph.
+  pub fn nlen(&self) -> usize {
     self.adjmtx.len()
+  }
+
+  /// Returns the number of edges of the graph.
+  pub fn elen(&self) -> usize {
+    let mut sum = 0;
+    for adjlst in &self.adjmtx { sum += adjlst.1.iter().len(); }
+    sum / 2
   }
 }
