@@ -5,7 +5,7 @@ use std::collections::HashMap;
 type AdjMtx = HashMap<usize, Vec<usize>>;
 
 /// This struct represents a graph.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Graph {
   degree: usize,
   adjmtx: AdjMtx,
