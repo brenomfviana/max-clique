@@ -1,7 +1,7 @@
 use std::cmp;
 use std::collections::HashMap;
 
-/// ```todo!()```.
+/// Adjacency matrix.
 type AdjMtx = HashMap<usize, Vec<usize>>;
 
 /// This struct represents a graph.
@@ -117,9 +117,21 @@ impl Graph {
     true
   }
 
-  /// ```todo!()```.
+  /// Returns true if the graph is complete and false otherwise.
   pub fn is_complete(&self) -> bool {
-    todo!();
+    let nodes = self.nodes();
+    for (i, k1) in self.adjmtx.keys().enumerate() {
+      // If at least one node has a different number of adjacent nodes
+      if i > 0 && self.degree_of(nodes[i]) != self.degree_of(nodes[i - 1]) {
+        return false;
+      }
+      // Check if all nodes are adjacent to each other
+      for k2 in self.adjmtx.keys() {
+        if k1 == k2 { continue; }
+        if !self.adjmtx[k1].contains(&k2) { return false; }
+      }
+    }
+    true
   }
 
   /// Returns true if the graph is empty and false otherwise.

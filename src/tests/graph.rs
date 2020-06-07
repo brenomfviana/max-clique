@@ -240,3 +240,42 @@ fn invalid_remove_edge() {
   let mut graph = Graph::new(3);
   graph.remove_edge((1, 2));
 }
+
+#[test]
+fn is_complete_i() {
+  let mut graph = Graph::new(3);
+  graph.insert_edge((1, 2));
+  graph.insert_edge((1, 3));
+  graph.insert_edge((2, 3));
+  assert!(graph.is_complete());
+}
+
+#[test]
+fn is_complete_ii() {
+  let mut graph = Graph::new(4);
+  graph.insert_edge((1, 2));
+  graph.insert_edge((1, 3));
+  graph.insert_edge((1, 4));
+  graph.insert_edge((2, 3));
+  graph.insert_edge((2, 4));
+  graph.insert_edge((3, 4));
+  assert!(graph.is_complete());
+}
+
+#[test]
+#[should_panic]
+fn is_not_complete_i() {
+  let mut graph = Graph::new(3);
+  graph.insert_edge((1, 2));
+  graph.insert_edge((2, 3));
+  assert!(graph.is_complete());
+}
+
+#[test]
+#[should_panic]
+fn is_not_complete_ii() {
+  let mut graph = Graph::new(4);
+  graph.insert_edge((1, 2));
+  graph.insert_edge((2, 3));
+  assert!(graph.is_complete());
+}
