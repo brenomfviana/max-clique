@@ -37,6 +37,22 @@ impl Graph {
     self.adjmtx[&n].len()
   }
 
+  /// Returns the list of nodes of the graph.
+  pub fn nodes(&self) -> Vec<usize> {
+    let mut keys: Vec<usize> = vec![];
+    for k in self.adjmtx.keys() { keys.push(*k); }
+    keys
+  }
+
+  /// Returns the list of edges of the graph.
+  pub fn edges(&self) -> Vec<(usize, usize)> {
+    let mut edges: Vec<(usize, usize)> = vec![];
+    for (k, adjlst) in &self.adjmtx {
+      for n in adjlst { edges.push((*k, *n)); }
+    }
+    edges
+  }
+
   /// Returns the adjacency list of a node.
   pub fn get_adjlst_of(&self, n: usize) -> &Vec<usize> {
     &self.adjmtx[&n]
