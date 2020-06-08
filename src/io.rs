@@ -30,19 +30,12 @@ impl Config {
       // Convert filename to string
       let filename = filename.to_string();
       // Check if there are still arguments
-      let solver;
-      if let Some(s) = matches.value_of("solver") {
-        solver = match s {
-          "Backtracking" => Solver::Backtracking,
-          "BranchAndBound" => Solver::BranchAndBound,
-          _ => return Err("you have entered an invalid solver"),
-        };
-      } else { return Err("you have entered invalid arguments") }
-      // Check if there are still arguments
-      let mut save = false;
-      if matches.is_present("save") { save = true; }
+      let solver = match matches.value_of("solver") {
+        Some("BranchAndBound") => Solver::BranchAndBound,
+        _ => Solver::Backtracking,
+      };
       // Return the reading configuration
-      return Ok(Config{ filename, solver, save })
+      return Ok(Config{ filename, solver, save: matches.is_present("save") })
     }
     Err("you did not enter the filename")
   }
@@ -68,15 +61,15 @@ pub fn read(config: &Config) -> Result<Graph, Box<dyn Error>> {
   // Read the file
   let content = fs::read_to_string(config.get_filename())?;
   // Split content by '\n'
-  let lines: Vec<&str> = content.split("\n").collect();
+  let lines: Vec<&str> = content.split('\n').collect();
   // Create an empty list of pairs (graph content)
   let mut gc = GraphContent::new();
   // Read the pairs
   for (i, line) in lines.iter().enumerate() {
     // Get list of chars of the line
-    let chrs = line.split(" ").collect::<Vec<&str>>();
+    let chrs = line.split(' ').collect::<Vec<&str>>();
     // Ignore comments
-    if line.len() == 0 || chrs[0] == "c" { continue; }
+    if line.is_empty() || chrs[0] == "c" { continue; }
     // Check if the line has less than 2 characters
     if chrs.len() <= 2 { panic!("Invalid pair at line {}!", i + 1); }
     // Convert into pair
@@ -92,25 +85,25 @@ pub fn read(config: &Config) -> Result<Graph, Box<dyn Error>> {
   if gc[0].1 != gc.len() - 1 { panic!("Invalid number of edges!"); }
   // Create the graph
   let mut graph = Graph::new(gc[0].0);
-  for e in 1..=gc[0].1 { graph.insert_edge(gc[e]); }
+  for e in gc.iter().take(gc[0].1 + 1).skip(1) { graph.insert_edge(*e); }
   // Return the graph
   Ok(graph)
 }
 
 /// Writes a file of a graph.
-pub fn write(filename: &String, result: &Graph) -> Result<(), &'static str> {
+pub fn write(filename: &str, result: &Graph) -> Result<(), &'static str> {
   // Create directory if it does not exists
   if let Some(dir) = dirs::home_dir() {
     if let Some(dir) = dir.into_os_string().to_str() {
       let target = format!("{}{}", dir, "/max-clique-solutions/");
       if !Path::new(&target).exists() {
         // Check if the folder was successifully created
-        if let Err(_) = fs::create_dir(&target) {
+        if fs::create_dir(&target).is_err() {
           return Err("the result folder could not be created")
         }
       }
       // Fix filename
-      let filename = filename.split("/").collect::<Vec<&str>>();
+      let filename = filename.split('/').collect::<Vec<&str>>();
       let filename = filename[filename.len() - 1];
       let filename = format!("{}result_{}", target, filename);
       // Get resulting graph edges
@@ -118,7 +111,7 @@ pub fn write(filename: &String, result: &Graph) -> Result<(), &'static str> {
       let mut nodes = result.nodes(); nodes.sort();
       for n in nodes { content += format!("{} ", n).as_str(); }
       // Create and write the file
-      if let Err(_) = fs::write(&filename, content) {
+      if fs::write(&filename, content).is_err() {
         return Err("something went wrong during file writing")
       }
       return Ok(())

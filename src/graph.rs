@@ -150,7 +150,7 @@ impl Graph {
   /// Returns the number of edges of the graph.
   pub fn elen(&self) -> usize {
     let mut sum = 0;
-    for (_, adjlst) in &self.adjmtx { sum += adjlst.iter().len(); }
+    for adjlst in self.adjmtx.values() { sum += adjlst.iter().len(); }
     sum / 2
   }
 }
