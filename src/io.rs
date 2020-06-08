@@ -41,12 +41,12 @@ impl Config {
   }
 
   /// Returns the filename.
-  pub fn get_filename(&self) -> &String {
+  pub fn filename(&self) -> &String {
     &self.filename
   }
 
   /// Returns the solver.
-  pub fn get_solver(&self) -> &Solver {
+  pub fn solver(&self) -> &Solver {
     &self.solver
   }
 
@@ -59,7 +59,7 @@ impl Config {
 /// Reads a graph file and returns the respective graph.
 pub fn read(config: &Config) -> Result<Graph, Box<dyn Error>> {
   // Read the file
-  let content = fs::read_to_string(config.get_filename())?;
+  let content = fs::read_to_string(config.filename())?;
   // Split content by '\n'
   let lines: Vec<&str> = content.split('\n').collect();
   // Create an empty list of pairs (graph content)

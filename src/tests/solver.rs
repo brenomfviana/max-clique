@@ -5,7 +5,7 @@ use crate::solver;
 #[test]
 #[should_panic]
 fn backtracking_empty_graph() {
-  let graph = Graph::new_empty();
+  let graph = Graph::default();
   let _ = solver::solve(&graph, &Solver::Backtracking).unwrap();
 }
 

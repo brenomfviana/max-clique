@@ -5,7 +5,7 @@ use std::collections::HashMap;
 type AdjMtx = HashMap<usize, Vec<usize>>;
 
 /// This struct represents a graph.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Default, Clone, Debug, Eq, PartialEq)]
 pub struct Graph {
   degree: usize,
   adjmtx: AdjMtx,
@@ -18,11 +18,6 @@ impl Graph {
     let mut adjmtx = AdjMtx::new();
     for n in 1..=nodes { adjmtx.insert(n, vec![]); }
     Graph { adjmtx, degree: 0 }
-  }
-
-  /// Creates a new empty graph and returns it.
-  pub fn new_empty() -> Graph {
-    Graph { adjmtx: AdjMtx::new(), degree: 0 }
   }
 
   /// Returns the graph degree.
@@ -39,24 +34,25 @@ impl Graph {
 
   /// Returns the list of nodes of the graph.
   pub fn nodes(&self) -> Vec<usize> {
-    let mut keys: Vec<usize> = vec![];
-    for k in self.adjmtx.keys() { keys.push(*k); }
-    keys
+    let mut nodes: Vec<usize> = vec![];
+    for n in self.adjmtx.keys() { nodes.push(*n); }
+    nodes
   }
 
   /// Returns the list of edges of the graph.
   pub fn edges(&self) -> Vec<(usize, usize)> {
     let mut edges: Vec<(usize, usize)> = vec![];
-    for (k, adjlst) in &self.adjmtx {
-      for n in adjlst {
-        if !edges.contains(&(*n, *k)) { edges.push((*k, *n)); }
+    let mut nodes = self.nodes(); nodes.sort();
+    for n in nodes {
+      for &an in &self.adjmtx[&n] {
+        if !edges.contains(&(an, n)) { edges.push((n, an)); }
       }
     }
     edges
   }
 
   /// Returns the adjacency list of a node.
-  pub fn get_adjlst_of(&self, n: usize) -> &Vec<usize> {
+  pub fn adjlst_of(&self, n: usize) -> &Vec<usize> {
     &self.adjmtx[&n]
   }
 

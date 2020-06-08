@@ -2,7 +2,7 @@ use crate::graph::Graph;
 
 /// Solves the maximum clique problem by using a simple backtracking.
 pub fn solve(graph: &Graph) -> Graph {
-  backtracking(&graph, &graph.nodes(), Graph::new_empty())
+  backtracking(&graph, &graph.nodes(), Graph::default())
 }
 
 fn backtracking(graph: &Graph, nodes: &[usize], mut clique: Graph) -> Graph {
@@ -14,7 +14,7 @@ fn backtracking(graph: &Graph, nodes: &[usize], mut clique: Graph) -> Graph {
     subgraph.insert_node(*n);
     // Add edges
     for c in subgraph.nodes() {
-      if graph.get_adjlst_of(*n).contains(&c) {
+      if graph.adjlst_of(*n).contains(&c) {
         subgraph.insert_edge((c, *n));
       }
     }

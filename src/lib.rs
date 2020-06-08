@@ -25,7 +25,7 @@ pub fn run(config: io::Config) -> Result<(), Box<dyn Error>> {
     println!("WARNING: the given graph is too big and cannot be printed.");
   }
   // Run the max clique solver
-  let result = solver::solve(&graph, &config.get_solver())?;
+  let result = solver::solve(&graph, &config.solver())?;
   // Check result size
   if result.nlen() <= 10 || result.elen() <= 10 {
     println!("Maximum clique subgraph:");
@@ -34,7 +34,7 @@ pub fn run(config: io::Config) -> Result<(), Box<dyn Error>> {
     println!("WARNING: the resulting graph is too big and cannot be printed.");
   }
   // Check if the result must be saved
-  if config.is_save() { io::write(&config.get_filename(), &result)?; }
+  if config.is_save() { io::write(&config.filename(), &result)?; }
   // Return Ok
   Ok(())
 }

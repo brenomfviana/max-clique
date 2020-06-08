@@ -14,9 +14,9 @@ pub fn solve(graph: &Graph, solver: &Solver) -> Result<Graph, &'static str> {
   if graph.nlen() == 2 && graph.elen() == 1 { return Ok(graph.clone()) }
   // If the graph degree is two return a adjacent pair of nodes
   if graph.degree() == 2 && graph.elen() <= 2 {
-    let mut solution = Graph::new_empty();
+    let mut solution = Graph::default();
     let n1 = graph.nodes()[0];
-    let n2 = graph.get_adjlst_of(n1)[0];
+    let n2 = graph.adjlst_of(n1)[0];
     solution.insert_node(n1);
     solution.insert_node(n2);
     solution.insert_edge((n1, n2));

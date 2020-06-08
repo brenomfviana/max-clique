@@ -1,8 +1,8 @@
 use crate::graph::*;
 
 #[test]
-fn new_empty_graph() {
-  let graph = Graph::new_empty();
+fn default_graph() {
+  let graph = Graph::default();
   assert_eq!(graph.is_empty(), true);
   assert_eq!(graph.degree(), 0);
   let mut nodes = graph.nodes(); nodes.sort();
@@ -41,7 +41,7 @@ fn adding_edges_i() {
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2]);
   let mut edges = graph.edges(); edges.sort();
-  assert_eq!(edges, vec![(1, 2), (2, 1)]);
+  assert_eq!(edges, vec![(1, 2)]);
 }
 
 #[test]
@@ -66,7 +66,7 @@ fn adding_edges_ii() {
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3]);
   let mut edges = graph.edges(); edges.sort();
-  assert_eq!(edges, vec![(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]);
+  assert_eq!(edges, vec![(1, 2), (1, 3), (2, 3)]);
 }
 
 #[test]
@@ -89,7 +89,7 @@ fn adding_edges_iii() {
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3]);
   let mut edges = graph.edges(); edges.sort();
-  assert_eq!(edges, vec![(1, 2), (1, 3), (2, 1), (3, 1)]);
+  assert_eq!(edges, vec![(1, 2), (1, 3)]);
 }
 
 #[test]
@@ -118,10 +118,10 @@ fn adjacency_list() {
   let mut graph = Graph::new(4);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(4), vec![]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(2), vec![1]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(4), vec![]);
 }
 
 #[test]
@@ -130,8 +130,8 @@ fn invalid_adjacency_list() {
   let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((2, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![]);
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(1), vec![]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
 }
 
 #[test]
@@ -139,13 +139,13 @@ fn insert_node_i() {
   let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(2), vec![1]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3]);
   graph.insert_node(4);
-  assert_eq!(*graph.get_adjlst_of(4), vec![]);
+  assert_eq!(*graph.adjlst_of(4), vec![]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3, 4]);
 }
@@ -155,15 +155,15 @@ fn insert_node_ii() {
   let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(2), vec![1]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3]);
   graph.insert_node(4);
   graph.insert_edge((4, 3));
-  assert_eq!(*graph.get_adjlst_of(3), vec![1, 4]);
-  assert_eq!(*graph.get_adjlst_of(4), vec![3]);
+  assert_eq!(*graph.adjlst_of(3), vec![1, 4]);
+  assert_eq!(*graph.adjlst_of(4), vec![3]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3, 4]);
 }
@@ -180,14 +180,14 @@ fn remove_node_i() {
   let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(2), vec![1]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3]);
   graph.remove_node(2);
-  assert_eq!(*graph.get_adjlst_of(1), vec![3]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![3]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 3]);
 }
@@ -197,14 +197,14 @@ fn remove_node_ii() {
   let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(2), vec![1]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![1, 2, 3]);
   graph.remove_node(1);
-  assert_eq!(*graph.get_adjlst_of(2), vec![]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![]);
+  assert_eq!(*graph.adjlst_of(2), vec![]);
+  assert_eq!(*graph.adjlst_of(3), vec![]);
   let mut nodes = graph.nodes(); nodes.sort();
   assert_eq!(nodes, vec![2, 3]);
 }
@@ -221,17 +221,17 @@ fn remove_edge() {
   let mut graph = Graph::new(3);
   graph.insert_edge((1, 2));
   graph.insert_edge((1, 3));
-  assert_eq!(*graph.get_adjlst_of(1), vec![2, 3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![1]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![2, 3]);
+  assert_eq!(*graph.adjlst_of(2), vec![1]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut edges = graph.edges(); edges.sort();
-  assert_eq!(edges, vec![(1, 2), (1, 3), (2, 1), (3, 1)]);
+  assert_eq!(edges, vec![(1, 2), (1, 3)]);
   graph.remove_edge((1, 2));
-  assert_eq!(*graph.get_adjlst_of(1), vec![3]);
-  assert_eq!(*graph.get_adjlst_of(2), vec![]);
-  assert_eq!(*graph.get_adjlst_of(3), vec![1]);
+  assert_eq!(*graph.adjlst_of(1), vec![3]);
+  assert_eq!(*graph.adjlst_of(2), vec![]);
+  assert_eq!(*graph.adjlst_of(3), vec![1]);
   let mut edges = graph.edges(); edges.sort();
-  assert_eq!(edges, vec![(1, 3), (3, 1)]);
+  assert_eq!(edges, vec![(1, 3)]);
 }
 
 #[test]
