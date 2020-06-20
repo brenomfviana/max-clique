@@ -1,4 +1,5 @@
 mod backtracking;
+mod branch_and_bound;
 
 use crate::io::Solver;
 use crate::graph::Graph;
@@ -23,8 +24,8 @@ pub fn solve(graph: &Graph, solver: &Solver) -> Result<Graph, &'static str> {
     return Ok(solution)
   }
   // Run solver and return solution
-  match solver {
-    Solver::Backtracking => Ok(backtracking::solve(&graph)),
-    Solver::BranchAndBound => todo!(),
-  }
+  Ok(match solver {
+    Solver::Backtracking => backtracking::solve(&graph),
+    Solver::BranchAndBound => branch_and_bound::solve(&graph),
+  })
 }
