@@ -39,6 +39,14 @@ impl Graph {
     nodes
   }
 
+  /// Returns the list of nodes of the graph ordered by their degree.
+  pub fn nodes_ord_by_degree(&self) -> Vec<usize> {
+    let mut nds_dgs: Vec<(usize, usize)> = vec![];
+    for &n in self.adjmtx.keys() { nds_dgs.push((self.degree_of(n), n)); }
+    nds_dgs.sort_by_key(|&w| cmp::Reverse(w));
+    nds_dgs.iter().map(|(_, n)| *n).collect()
+  }
+
   /// Returns the list of edges of the graph.
   pub fn edges(&self) -> Vec<(usize, usize)> {
     let mut edges: Vec<(usize, usize)> = vec![];
