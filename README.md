@@ -1,4 +1,4 @@
-# `max-clique`
+# Max Clique Solver
 
 ## Description
 
